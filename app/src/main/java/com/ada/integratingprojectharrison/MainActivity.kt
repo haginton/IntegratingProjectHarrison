@@ -1,19 +1,27 @@
 package com.ada.integratingprojectharrison
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
+import com.ada.integratingprojectharrison.data.RetrofitGenerator
+import com.ada.integratingprojectharrison.data.SearchResultDto
 import com.ada.integratingprojectharrison.databinding.ActivityMainBinding
+import com.ada.integratingprojectharrison.network.MoviesService
+import com.bumptech.glide.Glide
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+
+
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
+    //private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,37 +30,35 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
+        requestMoviesData()
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
+    }
 
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+    private fun requestMoviesData() {
+
+        GlobalScope.launch {
+            val moviesService = RetrofitGenerator.getInstance().create(MoviesService::class.java)
+            val response = moviesService.searchMovies("batman")
+            if (response.isSuccessful) {
+                val movies = response.body()
+                val movieToDisplay = movies!!.Search[0]
+
+                runOnUiThread {
+                    binding.movieTitle.text = movieToDisplay.Title
+                    binding.movieYear.text = movieToDisplay.Year
+                    Glide.with(baseContext).load(movieToDisplay.Poster).into(binding.moviePoster)
+                }
+
+
+            } else {
+                println(response.errorBody())
+            }
         }
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
+        /*val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.github.com/")
+            .build()
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+        val service: MoviesService = retrofit.create(MoviesService::class.java)*/
     }
 }
