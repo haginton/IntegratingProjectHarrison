@@ -1,22 +1,15 @@
 package com.ada.integratingprojectharrison
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.ada.integratingprojectharrison.data.RetrofitGenerator
-import com.ada.integratingprojectharrison.data.SearchResultDto
 import com.ada.integratingprojectharrison.databinding.ActivityMainBinding
 import com.ada.integratingprojectharrison.network.MoviesService
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,18 +23,31 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        requestMoviesData()
+        val buttonAction: Button = findViewById(R.id.buttonAction)
+        val movieCategory: TextView = findViewById(R.id.movieCategory)
+        val movieNumber: TextView = findViewById(R.id.movieNumber)
+
+        buttonAction.setOnClickListener {
+            val valueMovieCategory: String = movieCategory.text.toString()
+            val valueMovieNumber: String = movieNumber.text.toString()
+
+            val castValueMovieNumber: Int = valueMovieNumber.toInt()
+
+            requestMoviesData(valueMovieCategory, castValueMovieNumber)
+        }
+
+
 
     }
 
-    private fun requestMoviesData() {
+    private fun requestMoviesData(movieCategory: String, movieNumber: Int) {
 
         GlobalScope.launch {
             val moviesService = RetrofitGenerator.getInstance().create(MoviesService::class.java)
-            val response = moviesService.searchMovies("batman")
+            val response = moviesService.searchMovies(movieCategory)
             if (response.isSuccessful) {
                 val movies = response.body()
-                val movieToDisplay = movies!!.Search[0]
+                val movieToDisplay = movies!!.Search[movieNumber]
 
                 runOnUiThread {
                     binding.movieTitle.text = movieToDisplay.Title
