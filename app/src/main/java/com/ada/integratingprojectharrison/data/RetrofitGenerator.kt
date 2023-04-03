@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 class RetrofitGenerator {
 
-    companion object {
+    /*companion object {
         fun getInstance(): Retrofit {
             val loggingInterceptor = HttpLoggingInterceptor()
             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -31,5 +31,5 @@ class RetrofitGenerator {
                 .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .build()
         }
-    }
+    }*/
 }
