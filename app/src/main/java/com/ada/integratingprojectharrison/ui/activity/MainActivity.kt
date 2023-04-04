@@ -1,15 +1,18 @@
-package com.ada.integratingprojectharrison
+package com.ada.integratingprojectharrison.ui.activity
 
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.ada.integratingprojectharrison.R
 import com.ada.integratingprojectharrison.data.LoginDto
 import com.ada.integratingprojectharrison.data.TokenDto
 import com.ada.integratingprojectharrison.databinding.ActivityMainBinding
 import com.ada.integratingprojectharrison.network.AuthService
 import com.ada.integratingprojectharrison.network.MoviesService
+import com.ada.integratingprojectharrison.network.ProductsService
+import com.ada.integratingprojectharrison.storage.LocalStorage
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
@@ -20,10 +23,16 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    //@Inject
-    //lateinit var moviesService: MoviesService
     @Inject
-    lateinit var authService: AuthService
+    lateinit var moviesService: MoviesService
+
+    @Inject
+    lateinit var productsService: ProductsService
+    //@Inject
+    //lateinit var authService: AuthService
+
+    //@Inject
+    //lateinit var localStorage: LocalStorage;
 
     //private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -44,15 +53,16 @@ class MainActivity : AppCompatActivity() {
 
             val castValueMovieNumber: Int = valueMovieNumber.toInt()
 
-            //requestMoviesData(valueMovieCategory, castValueMovieNumber)
+            requestMoviesData(valueMovieCategory, castValueMovieNumber)
 
         }
 
-        requestAuthService()
+        //requestAuthService()
+        //Log.d("AndroidKotlinAda", "token from storage saved: ${localStorage.getToken()}")
 
     }
 
-    private fun requestAuthService() {
+    /*private fun requestAuthService() {
         GlobalScope.launch {
             val loginDto = LoginDto(
                 "ada6@mail.com",
@@ -63,14 +73,19 @@ class MainActivity : AppCompatActivity() {
             if (response.isSuccessful){
                 val token = response.body()
                 Log.d("AndroidKotlinAda", "token: ${token!!.token}")
+                localStorage.saveToken(token.token)
+                Log.d("AndroidKotlinAda", "token from storage: ${localStorage.getToken()}")
             }
         }
-    }
+    }*/
 
-    /*private fun requestMoviesData(movieCategory: String, movieNumber: Int) {
+    private fun requestMoviesData(movieCategory: String, movieNumber: Int) {
 
         GlobalScope.launch {
-
+            val response2 = productsService.getProduct("63db215f98077f6f4162ad1a")
+            if (response2.isSuccessful){
+                Log.d("AndroidKotlinAda", "response product: ${response2.body()}")
+            }
             //val moviesService = RetrofitGenerator.getInstance().create(MoviesService::class.java)
             val response = moviesService.searchMovies(movieCategory)
             if (response.isSuccessful) {
@@ -111,5 +126,5 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val service: MoviesService = retrofit.create(MoviesService::class.java)*/
-    }*/
+    }
 }
