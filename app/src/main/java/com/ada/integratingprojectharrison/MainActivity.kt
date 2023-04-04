@@ -1,22 +1,29 @@
 package com.ada.integratingprojectharrison
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.ada.integratingprojectharrison.data.LoginDto
+import com.ada.integratingprojectharrison.data.TokenDto
 import com.ada.integratingprojectharrison.databinding.ActivityMainBinding
+import com.ada.integratingprojectharrison.network.AuthService
 import com.ada.integratingprojectharrison.network.MoviesService
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    //@Inject
+    //lateinit var moviesService: MoviesService
     @Inject
-    lateinit var moviesService: MoviesService
+    lateinit var authService: AuthService
 
     //private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -37,14 +44,30 @@ class MainActivity : AppCompatActivity() {
 
             val castValueMovieNumber: Int = valueMovieNumber.toInt()
 
-            requestMoviesData(valueMovieCategory, castValueMovieNumber)
+            //requestMoviesData(valueMovieCategory, castValueMovieNumber)
+
         }
 
-
+        requestAuthService()
 
     }
 
-    private fun requestMoviesData(movieCategory: String, movieNumber: Int) {
+    private fun requestAuthService() {
+        GlobalScope.launch {
+            val loginDto = LoginDto(
+                "ada6@mail.com",
+                "1523asd*"
+            )
+            val response: Response<TokenDto> = authService.login(loginDto)
+
+            if (response.isSuccessful){
+                val token = response.body()
+                Log.d("AndroidKotlinAda", "token: ${token!!.token}")
+            }
+        }
+    }
+
+    /*private fun requestMoviesData(movieCategory: String, movieNumber: Int) {
 
         GlobalScope.launch {
 
@@ -88,5 +111,5 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val service: MoviesService = retrofit.create(MoviesService::class.java)*/
-    }
+    }*/
 }
