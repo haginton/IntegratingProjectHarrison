@@ -11,6 +11,7 @@ import com.ada.integratingprojectharrison.data.TokenDto
 import com.ada.integratingprojectharrison.databinding.ActivityMainBinding
 import com.ada.integratingprojectharrison.network.AuthService
 import com.ada.integratingprojectharrison.network.MoviesService
+import com.ada.integratingprojectharrison.network.ProductsService
 import com.ada.integratingprojectharrison.storage.LocalStorage
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +25,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var moviesService: MoviesService
+
+    @Inject
+    lateinit var productsService: ProductsService
     //@Inject
     //lateinit var authService: AuthService
 
@@ -78,7 +82,10 @@ class MainActivity : AppCompatActivity() {
     private fun requestMoviesData(movieCategory: String, movieNumber: Int) {
 
         GlobalScope.launch {
-
+            val response2 = productsService.getProduct("63db215f98077f6f4162ad1a")
+            if (response2.isSuccessful){
+                Log.d("AndroidKotlinAda", "response product: ${response2.body()}")
+            }
             //val moviesService = RetrofitGenerator.getInstance().create(MoviesService::class.java)
             val response = moviesService.searchMovies(movieCategory)
             if (response.isSuccessful) {

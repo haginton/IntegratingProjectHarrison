@@ -1,9 +1,12 @@
 package com.ada.integratingprojectharrison.di
 
+import com.ada.integratingprojectharrison.data.AuthInterceptor
 import com.ada.integratingprojectharrison.data.RetrofitGenerator
 import com.ada.integratingprojectharrison.network.ActorsService
 import com.ada.integratingprojectharrison.network.AuthService
 import com.ada.integratingprojectharrison.network.MoviesService
+import com.ada.integratingprojectharrison.network.ProductsService
+import com.ada.integratingprojectharrison.storage.LocalStorage
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
@@ -38,14 +41,21 @@ object MovieServiceModule {
     }
 
     @Provides
-    fun providesRetrofit() : Retrofit {
+    fun provideProductsService(retrofit: Retrofit): ProductsService{
+        return retrofit.create(ProductsService::class.java)
+    }
+
+    @Provides
+    fun providesRetrofit(localStorage: LocalStorage) : Retrofit {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .writeTimeout(0, TimeUnit.MILLISECONDS)
             .readTimeout(2, TimeUnit.MINUTES)
-            .connectTimeout(1, TimeUnit.MINUTES).build()
+            .connectTimeout(1, TimeUnit.MINUTES)
+            .addInterceptor(AuthInterceptor(localStorage))
+            .build()
 
         val gson = GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")

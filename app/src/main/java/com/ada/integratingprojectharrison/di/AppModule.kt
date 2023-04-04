@@ -15,7 +15,7 @@ const val SHARED_PREFERENCES_NAME = "shared_preferences_ada"
 @InstallIn(ActivityComponent::class)
 object AppModule {
 
-    //se necedita el contexto o activity, por parametro de la función
+    //se necesita el contexto o activity, por parametro de la función
     @Provides
     fun provideLocalStorage(@ApplicationContext appContext: Context): LocalStorage{
         //el sharedPreference es como una clase especial del sistema operativo por eso se requiere el contexto
