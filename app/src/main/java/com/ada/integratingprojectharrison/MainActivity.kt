@@ -10,6 +10,7 @@ import com.ada.integratingprojectharrison.data.TokenDto
 import com.ada.integratingprojectharrison.databinding.ActivityMainBinding
 import com.ada.integratingprojectharrison.network.AuthService
 import com.ada.integratingprojectharrison.network.MoviesService
+import com.ada.integratingprojectharrison.storage.LocalStorage
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
@@ -24,6 +25,9 @@ class MainActivity : AppCompatActivity() {
     //lateinit var moviesService: MoviesService
     @Inject
     lateinit var authService: AuthService
+
+    @Inject
+    lateinit var localStorage: LocalStorage;
 
     //private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -48,7 +52,8 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        requestAuthService()
+        //requestAuthService()
+        Log.d("AndroidKotlinAda", "token from storage saved: ${localStorage.getToken()}")
 
     }
 
@@ -63,6 +68,8 @@ class MainActivity : AppCompatActivity() {
             if (response.isSuccessful){
                 val token = response.body()
                 Log.d("AndroidKotlinAda", "token: ${token!!.token}")
+                localStorage.saveToken(token.token)
+                Log.d("AndroidKotlinAda", "token from storage: ${localStorage.getToken()}")
             }
         }
     }
