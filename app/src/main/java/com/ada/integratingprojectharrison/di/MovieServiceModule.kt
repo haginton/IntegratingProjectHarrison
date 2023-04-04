@@ -1,5 +1,6 @@
 package com.ada.integratingprojectharrison.di
 
+import com.ada.integratingprojectharrison.data.RetrofitGenerator
 import com.ada.integratingprojectharrison.network.ActorsService
 import com.ada.integratingprojectharrison.network.AuthService
 import com.ada.integratingprojectharrison.network.MoviesService
@@ -19,10 +20,11 @@ import java.util.concurrent.TimeUnit
 @InstallIn(ActivityComponent::class)
 object MovieServiceModule {
 
-//    @Provides
-//    fun provideMoviesService(retrofit: Retrofit) : MoviesService {
-//        return retrofit.create(MoviesService::class.java)
-//    }
+    @Provides
+    fun provideMoviesService() : MoviesService {
+        val retrofit = RetrofitGenerator.getInstance()
+        return retrofit.create(MoviesService::class.java)
+    }
 
     //Ejemplo de Provide ficticio solo para ver que puedo agregar mas servicios
     @Provides

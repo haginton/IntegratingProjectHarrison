@@ -1,10 +1,11 @@
-package com.ada.integratingprojectharrison
+package com.ada.integratingprojectharrison.ui.activity
 
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.ada.integratingprojectharrison.R
 import com.ada.integratingprojectharrison.data.LoginDto
 import com.ada.integratingprojectharrison.data.TokenDto
 import com.ada.integratingprojectharrison.databinding.ActivityMainBinding
@@ -21,13 +22,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var moviesService: MoviesService
     //@Inject
-    //lateinit var moviesService: MoviesService
-    @Inject
-    lateinit var authService: AuthService
+    //lateinit var authService: AuthService
 
-    @Inject
-    lateinit var localStorage: LocalStorage;
+    //@Inject
+    //lateinit var localStorage: LocalStorage;
 
     //private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -48,16 +49,16 @@ class MainActivity : AppCompatActivity() {
 
             val castValueMovieNumber: Int = valueMovieNumber.toInt()
 
-            //requestMoviesData(valueMovieCategory, castValueMovieNumber)
+            requestMoviesData(valueMovieCategory, castValueMovieNumber)
 
         }
 
         //requestAuthService()
-        Log.d("AndroidKotlinAda", "token from storage saved: ${localStorage.getToken()}")
+        //Log.d("AndroidKotlinAda", "token from storage saved: ${localStorage.getToken()}")
 
     }
 
-    private fun requestAuthService() {
+    /*private fun requestAuthService() {
         GlobalScope.launch {
             val loginDto = LoginDto(
                 "ada6@mail.com",
@@ -72,9 +73,9 @@ class MainActivity : AppCompatActivity() {
                 Log.d("AndroidKotlinAda", "token from storage: ${localStorage.getToken()}")
             }
         }
-    }
+    }*/
 
-    /*private fun requestMoviesData(movieCategory: String, movieNumber: Int) {
+    private fun requestMoviesData(movieCategory: String, movieNumber: Int) {
 
         GlobalScope.launch {
 
@@ -118,5 +119,5 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val service: MoviesService = retrofit.create(MoviesService::class.java)*/
-    }*/
+    }
 }

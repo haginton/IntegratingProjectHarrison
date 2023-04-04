@@ -4,7 +4,7 @@ interface LocalStorage {
 
     fun saveToken(token: String)
 
-    fun getToken(): String?
+    fun getToken(): String
 
     fun isAuthenticated(): Boolean
 

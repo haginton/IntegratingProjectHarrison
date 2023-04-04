@@ -11,12 +11,12 @@ class SharedPreferencesLocalStorage(val sharedPreferences: SharedPreferences): L
             .apply()
     }
 
-    override fun getToken(): String? {
-        return sharedPreferences.getString(TOKEN_KEY, "")
+    override fun getToken(): String {
+        return sharedPreferences.getString(TOKEN_KEY, "")!!
     }
 
     override fun isAuthenticated(): Boolean {
-        return getToken()!!.isNotEmpty()
+        return getToken().isNotEmpty()
     }
 
     override fun clearToken() {
