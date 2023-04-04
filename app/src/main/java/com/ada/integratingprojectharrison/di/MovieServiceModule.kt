@@ -1,6 +1,7 @@
 package com.ada.integratingprojectharrison.di
 
 import com.ada.integratingprojectharrison.network.ActorsService
+import com.ada.integratingprojectharrison.network.AuthService
 import com.ada.integratingprojectharrison.network.MoviesService
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -18,15 +19,20 @@ import java.util.concurrent.TimeUnit
 @InstallIn(ActivityComponent::class)
 object MovieServiceModule {
 
-    @Provides
-    fun provideMoviesService(retrofit: Retrofit) : MoviesService {
-        return retrofit.create(MoviesService::class.java)
-    }
+//    @Provides
+//    fun provideMoviesService(retrofit: Retrofit) : MoviesService {
+//        return retrofit.create(MoviesService::class.java)
+//    }
 
     //Ejemplo de Provide ficticio solo para ver que puedo agregar mas servicios
     @Provides
     fun provideActorService(retrofit: Retrofit) : ActorsService {
         return retrofit.create(ActorsService::class.java)
+    }
+
+    @Provides
+    fun provideAuthService(retrofit: Retrofit): AuthService{
+        return retrofit.create(AuthService::class.java)
     }
 
     @Provides
@@ -44,7 +50,8 @@ object MovieServiceModule {
             .create()
 
         return Retrofit.Builder()
-            .baseUrl("https://www.omdbapi.com/")
+            //.baseUrl("https://www.omdbapi.com/")
+            .baseUrl("https://api-rest-java-production-bd09.up.railway.app/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
